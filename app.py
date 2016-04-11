@@ -1,6 +1,7 @@
-# Environmental modules
-
-# Local modules
+from boxscore import * 
+from databasemanager import DatabaseManager
+import statistics, webscraper
+from config import *
 
 if __name__ == '__main__':
-    pass
+    database_manager = DatabaseManager()
