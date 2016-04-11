@@ -39,7 +39,37 @@ class WebScraperManager():
 
 
     def get_individual_game_team_data(self):
-        pass
+        
+        staging = soup.find('th', text='Scoring').parent.parent
+        content = staging.find_all('tr')[2:]
+
+        # Inserting placeholder values where appropriate for now
+        awayTeam = {
+            'teamName': content[0].contents[1].text,
+            'seasonYear': 2016,
+            'gameDate': date(month=12, day=12, year=2012),
+            'opponent': content[1].contents[1].text,
+            'firstHalfScore': content[0].contents[3].text,
+            'secondHalfScore': content[0].contents[5].text,
+            'overtimeScore': None,
+            'finalScore': content[0].contents[7].text,
+            'finalResult': True if content[0].contents[7].text > content[1].contents[7].text else False
+            }
+
+        homeTeam = {
+            'teamName': content[1].contents[1].text,
+            'seasonYear': 2016,
+            'gameDate': date(month=12, day=12, year=2012),
+            'opponent': content[0].contents[1].text,
+            'firstHalfScore': content[1].contents[3].text,
+            'secondHalfScore': content[1].contents[5].text,
+            'overtimeScore': None,
+            'finalScore': content[1].contents[7].text,
+            'finalResult': True if content[1].contents[7].text > content[0].contents[7].text else False
+            }
+
+        return [awayTeam, homeTeam]
+
 
     def get_individual_teams_game_stats(self):
         pass
