@@ -1,7 +1,9 @@
 from boxscore import * 
 from databasemanager import DatabaseManager
-import statistics, webscraper
+from webscraper import WebScraperManager
+import statistics
 from config import *
 
 if __name__ == '__main__':
     database_manager = DatabaseManager()
+    web_scraper = WebScraperManager()

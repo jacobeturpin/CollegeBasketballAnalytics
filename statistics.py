@@ -5,29 +5,12 @@ from decimal import Decimal
 
 class BasicStatistics():
 
-    def __init__(self, 
-                 minutes_played = None, 
-                 field_goals = 0, 
-                 field_goal_attempts = 0,
-                 field_goal_percentage = None, 
-                 two_point_field_goals = 0,
-                 two_point_field_goal_attempts = 0,
-                 two_point_field_goal_percentage = None,
-                 three_point_field_goals = 0,
-                 three_point_field_goal_attempts = 0,
-                 three_point_field_goal_percentage = None, 
-                 free_throws = 0,
-                 free_throw_attempts = 0, 
-                 free_throw_percentage = None,
-                 offensive_rebounds = 0, 
-                 defensive_rebounds = 0,
-                 total_rebounds = 0, 
-                 assists = 0, 
-                 steals = 0, 
-                 blocks = 0, 
-                 turnovers = 0,
-                 personal_fouls = 0, 
-                 points = 0):
+    def __init__(self, minutes_played, field_goals, field_goal_attempts, field_goal_percentage, 
+                 two_point_field_goals, two_point_field_goal_attempts, two_point_field_goal_percentage,
+                 three_point_field_goals, three_point_field_goal_attempts, three_point_field_goal_percentage, 
+                 free_throws, free_throw_attempts, free_throw_percentage, offensive_rebounds, 
+                 defensive_rebounds, total_rebounds, assists, steals, blocks, turnovers,
+                 personal_fouls, points):
 
         self.minutes_played = minutes_played
         self.field_goals = field_goals
@@ -55,21 +38,11 @@ class BasicStatistics():
 
 class AdvancedStatistics():
 
-    def __init__(self,
-                 true_shooting_percentage = None,
-                 effective_field_goal_percentage = None,
-                 three_point_attempt_rate = None,
-                 free_throw_attempt_rate = None,
-                 offensive_rebound_percentage = Decimal(0.0),
-                 defensive_rebound_percentage = Decimal(0.0),
-                 total_rebound_percentage = Decimal(0.0),
-                 assist_percentage = Decimal(0.0),
-                 steal_percentage = Decimal(0.0),
-                 block_percentage = Decimal(0.0),
-                 turnover_percentage = None,
-                 usage_percentage = Decimal(0.0),
-                 offensive_rating = None,
-                 defensive_rating = None):
+    def __init__(self, true_shooting_percentage, effective_field_goal_percentage,
+                 three_point_attempt_rate, free_throw_attempt_rate, offensive_rebound_percentage,
+                 defensive_rebound_percentage, total_rebound_percentage, assist_percentage,
+                 steal_percentage, block_percentage, turnover_percentage, usage_percentage,
+                 offensive_rating, defensive_rating):
 
         self.true_shooting_percentage = true_shooting_percentage
         self.effective_field_goal_percentage = effective_field_goal_percentage
