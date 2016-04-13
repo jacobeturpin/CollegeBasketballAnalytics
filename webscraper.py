@@ -1,13 +1,16 @@
-import requests, datetime
+import requests, datetime, uuid
 from bs4 import BeautifulSoup
+from boxscore import *
 
 
 class WebScraperManager():
 
     _url_root = 'http://sports-reference.com/cbb/'
 
+
     def __init__(self):
         return None
+
 
     def get_all_games_for_date(self, month, day, year):
 
@@ -80,57 +83,37 @@ class WebScraperManager():
         for team in teams:
             i += 1 
 
-            minutesPlayed = int(content[i-1][0].text)
-            fieldGoals = int(content[i-1][1].text)
-            fieldGoalAttempts = int(content[i-1][2].text)
-            fieldGoalPercentage = Decimal(content[i-1][3].text)
-            twoPointFieldGoals = int(content[i-1][4].text)
-            twoPointFieldGoalAttempts = int(content[i-1][5].text)
-            twoPointFieldGoalPercentage = Decimal(content[i-1][6].text)
-            threePointFieldGoals = int(content[i-1][7].text)
-            threePointFieldGoalAttempts = int(content[i-1][8].text)
-            threePointFieldGoalPercentage = Decimal(content[i-1][9].text)
-            freeThrows = int(content[i-1][10].text)
-            freeThrowAttempts = int(content[i-1][11].text)
-            freeThrowPercentage = Decimal(content[i-1][12].text)
-            offensiveRebounds = int(content[i-1][13].text)
-            defensiveRebounds = int(content[i-1][14].text)
-            totalRebounds = int(content[i-1][15].text)
+            minutes_played = int(content[i-1][0].text)
+            field_goals = int(content[i-1][1].text)
+            field_goal_attempts = int(content[i-1][2].text)
+            field_goal_percentage = Decimal(content[i-1][3].text)
+            two_point_field_goals = int(content[i-1][4].text)
+            two_point_field_goal_attempts = int(content[i-1][5].text)
+            two_point_field_goal_percentage = Decimal(content[i-1][6].text)
+            three_point_field_goals = int(content[i-1][7].text)
+            three_point_field_goal_attempts = int(content[i-1][8].text)
+            three_point_field_goal_percentage = Decimal(content[i-1][9].text)
+            free_throws = int(content[i-1][10].text)
+            free_throw_attempts = int(content[i-1][11].text)
+            free_throw_percentage = Decimal(content[i-1][12].text)
+            offensive_rebounds = int(content[i-1][13].text)
+            defensive_rebounds = int(content[i-1][14].text)
+            total_rebounds = int(content[i-1][15].text)
             assists = int(content[i-1][16].text)
             steals = int(content[i-1][17].text)
             blocks = int(content[i-1][18].text)
             turnovers = int(content[i-1][19].text)
-            personalFouls = int(content[i-1][20].text)
+            personal_fouls = int(content[i-1][20].text)
             points = int(content[i-1][21].text)
 
-            teamStats.append({
-                    'teamName': teams[0]['teamName'] if i % 2 == 1 else teams[1]['teamName'],
-                    'seasonYear': 2016,
-                    'gameDate': date(month=12,day=12,year=2012),
-                    'minutesPlayed': minutesPlayed if minutesPlayed is not '' else 5,
-                    'fieldGoals': fieldGoals if fieldGoals is not '' else 5,
-                    'fieldGoalAttempts': fieldGoalAttempts if fieldGoalAttempts is not '' else 5,
-                    'fieldGoalPercentage': fieldGoalPercentage if fieldGoalPercentage is not '' else 5,
-                    'twoPointFieldGoals': twoPointFieldGoals if twoPointFieldGoals is not '' else 5,
-                    'twoPointFieldGoalAttempts': twoPointFieldGoalAttempts if twoPointFieldGoalAttempts is not '' else 5,
-                    'twoPointFieldGoalPercentage': twoPointFieldGoalPercentage if twoPointFieldGoalPercentage is not '' else 5,
-                    'threePointFieldGoals': threePointFieldGoals if threePointFieldGoals is not '' else 5,
-                    'threePointFieldGoalAttempts': threePointFieldGoalAttempts if threePointFieldGoalAttempts is not '' else 5,
-                    'threePointFieldGoalPercentage': threePointFieldGoalPercentage if threePointFieldGoalPercentage is not '' else 5,
-                    'freeThrows': freeThrows if freeThrows is not '' else 5,
-                    'freeThrowAttempts': freeThrowAttempts if freeThrowAttempts is not '' else 5,
-                    'freeThrowPercentage': freeThrowPercentage if freeThrowPercentage is not '' else 5,
-                    'offensiveRebounds': offensiveRebounds if offensiveRebounds is not '' else 5,
-                    'defensiveRebounds': defensiveRebounds if defensiveRebounds is not '' else 5,
-                    'totalRebounds': totalRebounds if totalRebounds is not '' else 5,
-                    'assists': assists if assists is not '' else 5,
-                    'steals': steals if steals is not '' else 5,
-                    'blocks': blocks if blocks is not '' else 5,
-                    'turnovers': turnovers if turnovers is not '' else 5,
-                    'personalFouls': personalFouls if personalFouls is not '' else 5,
-                    'points': points if points is not '' else 5)
+            teamStats.append(TeamBoxScore(minutes_played, field_goals, field_goal_attempts, field_goal_percentage, two_point_field_goals, 
+                                          two_point_field_goal_attempts, two_point_field_goal_percentage, three_point_field_goals, 
+                                          three_point_field_goal_attempts, three_point_field_goal_percentage, free_throws, free_throw_attempts, 
+                                          free_throw_percentage, offensive_rebounds, defensive_rebounds, total_rebounds, assists, 
+                                          steals, blocks, turnovers, personal_fouls, points))
 
         return teamStats
+
 
     # Need to make tolerant of null statistical categories
     def get_individual_players_game_stats(self, soup):
@@ -147,57 +130,37 @@ class WebScraperManager():
 
                 content = player.parent.parent.contents
 
-                minutesPlayed = int(content[3].text)
-                fieldGoals = int(content[5].text)
-                fieldGoalAttempts = int(content[7].text)
-                fieldGoalPercentage = Decimal(content[9].text) if content[9].text is not '' else Decimal(1.0)
-                twoPointFieldGoals = int(content[11].text)
-                twoPointFieldGoalAttempts = int(content[13].text)
-                twoPointFieldGoalPercentage = Decimal(content[15].text) if content[15].text is not '' else Decimal(1.0)
-                threePointFieldGoals = int(content[17].text)
-                threePointFieldGoalAttempts = int(content[19].text)
-                threePointFieldGoalPercentage = Decimal(content[21].text) if content[21].text is not '' else Decimal(1.0)
-                freeThrows = int(content[23].text)
-                freeThrowAttempts = int(content[25].text)
-                freeThrowPercentage = Decimal(content[27].text) if content[27].text is not '' else Decimal(1.0)
-                offensiveRebounds = int(content[29].text)
-                defensiveRebounds = int(content[31].text)
-                totalRebounds = int(content[33].text)
+                minutes_played = int(content[3].text)
+                field_goals = int(content[5].text)
+                field_goal_attempts = int(content[7].text)
+                field_goal_percentage = Decimal(content[9].text) if content[9].text is not '' else Decimal(1.0)
+                two_point_field_goals = int(content[11].text)
+                two_point_field_goal_attempts = int(content[13].text)
+                two_point_field_goal_percentage = Decimal(content[15].text) if content[15].text is not '' else Decimal(1.0)
+                three_point_field_goals = int(content[17].text)
+                three_point_field_goal_attempts = int(content[19].text)
+                three_point_field_goal_percentage = Decimal(content[21].text) if content[21].text is not '' else Decimal(1.0)
+                free_throws = int(content[23].text)
+                free_throw_attempts = int(content[25].text)
+                free_throw_percentage = Decimal(content[27].text) if content[27].text is not '' else Decimal(1.0)
+                offensive_rebounds = int(content[29].text)
+                defensive_rebounds = int(content[31].text)
+                total_rebounds = int(content[33].text)
                 assists = int(content[35].text)
                 steals = int(content[37].text)
                 blocks = int(content[39].text)
                 turnovers = int(content[41].text)
-                personalFouls = int(content[43].text)
+                personal_fouls = int(content[43].text)
                 points = int(content[45].text)
 
-                # Hard coding placeholder values for testing
-                playerStats.append({
-                    'teamName': teams[0]['teamName'] if i % 2 == 1 else teams[1]['teamName'],
-                    'playerName': content[1].text,
-                    'seasonYear': 2016,
-                    'gameDate': date(month=12,day=12,year=2012),
-                    'minutesPlayed': minutesPlayed if minutesPlayed is not '' else 5,
-                    'fieldGoals': fieldGoals if fieldGoals is not '' else 5,
-                    'fieldGoalAttempts': fieldGoalAttempts if fieldGoalAttempts is not '' else 5,
-                    'fieldGoalPercentage': fieldGoalPercentage if fieldGoalPercentage is not '' else 5,
-                    'twoPointFieldGoals': twoPointFieldGoals if twoPointFieldGoals is not '' else 5,
-                    'twoPointFieldGoalAttempts': twoPointFieldGoalAttempts if twoPointFieldGoalAttempts is not '' else 5,
-                    'twoPointFieldGoalPercentage': twoPointFieldGoalPercentage if twoPointFieldGoalPercentage is not '' else 5.0,
-                    'threePointFieldGoals': threePointFieldGoals if threePointFieldGoals is not '' else 5,
-                    'threePointFieldGoalAttempts': threePointFieldGoalAttempts if threePointFieldGoalAttempts is not '' else 5,
-                    'threePointFieldGoalPercentage': threePointFieldGoalPercentage if threePointFieldGoalPercentage is not '' else 5.0,
-                    'freeThrows': freeThrows if freeThrows is not '' else 5,
-                    'freeThrowAttempts': freeThrowAttempts if freeThrowAttempts is not '' else 5,
-                    'freeThrowPercentage': freeThrowPercentage if freeThrowPercentage is not '' else 5.0,
-                    'offensiveRebounds': offensiveRebounds if offensiveRebounds is not '' else 5,
-                    'defensiveRebounds': defensiveRebounds if defensiveRebounds is not '' else 5,
-                    'totalRebounds': totalRebounds if totalRebounds is not '' else 5,
-                    'assists': assists if assists is not '' else 5,
-                    'steals': steals if steals is not '' else 5,
-                    'blocks': blocks if blocks is not '' else 5,
-                    'turnovers': turnovers if turnovers is not '' else 5,
-                    'personalFouls': personalFouls if personalFouls is not '' else 5,
-                    'points': points if points is not '' else 5)
+                # Need to include player id
+                playerStats.append(PlayerBoxScore(minutes_played, field_goals, field_goal_attempts, field_goal_percentage, 
+                                                  two_point_field_goals, two_point_field_goal_attempts, 
+                                                  two_point_field_goal_percentage, three_point_field_goals, 
+                                                  three_point_field_goal_attempts, three_point_field_goal_percentage, 
+                                                  free_throws, free_throw_attempts, free_throw_percentage, offensive_rebounds, 
+                                                  defensive_rebounds, total_rebounds, assists, steals, blocks, turnovers,
+                                                  personal_fouls, points))
 
 
         return playerStats
