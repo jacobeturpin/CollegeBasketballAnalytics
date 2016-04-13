@@ -128,27 +128,76 @@ class WebScraperManager():
                     'blocks': blocks if blocks is not '' else 5,
                     'turnovers': turnovers if turnovers is not '' else 5,
                     'personalFouls': personalFouls if personalFouls is not '' else 5,
-                    'points': points if points is not '' else 5,
-
-                    # Advanced (Calculated) Metrics
-                    'trueShootingPercentage': calculateTrueShootingPercentage(points, fieldGoalAttempts, freeThrowAttempts),
-                    'effectiveFieldGoalPercentage': calculateEffectiveFieldGoalPercentage(fieldGoals, threePointFieldGoals, fieldGoalAttempts),
-                    'threePointAttemptRate': calculateThreePointAttemptRate(threePointFieldGoalAttempts, fieldGoalAttempts),
-                    'freeThrowAttemptRate': calculateFreeThrowAttemptRate(freeThrowAttempts, fieldGoalAttempts),
-                    'offensiveReboundingPercentage': calculateOffensiveReboundingPercentage(),
-                    'defensiveReboundingPercentage': calculateDefensiveReboundingPercentage(),
-                    'totalReboundingPercentage': calculateTotalReboundingPercentage(),
-                    'assistPercentage': calculateAssistPercentage(),
-                    'stealPercentage': calculateStealPercentage(),
-                    'blockPercentage': calculateBlockPercentage(),
-                    'turnoverPercentage': calculateTurnoverPercentage(),
-                    'usagePercentage': calculateUsagePercentage(),
-                    'offensiveRating': calculateOffensiveRating(),
-                    'defensiveRating': calculateDefensiveRating()
-                    })
+                    'points': points if points is not '' else 5)
 
         return teamStats
 
     # Need to make tolerant of null statistical categories
-    def get_individual_players_game_stats(self):
-        pass
+    def get_individual_players_game_stats(self, soup):
+        
+        i, playerStats = 0, []
+
+        for team in soup.find_all('th', text='Basic Box Score Stats'):
+        
+            # Use modulo to test for home/away status
+            i += 1
+
+            #Grab the individual players
+            for player in team.parent.parent.parent.find_all('a', href=re.compile('/cbb/players/.')):
+
+                content = player.parent.parent.contents
+
+                minutesPlayed = int(content[3].text)
+                fieldGoals = int(content[5].text)
+                fieldGoalAttempts = int(content[7].text)
+                fieldGoalPercentage = Decimal(content[9].text) if content[9].text is not '' else Decimal(1.0)
+                twoPointFieldGoals = int(content[11].text)
+                twoPointFieldGoalAttempts = int(content[13].text)
+                twoPointFieldGoalPercentage = Decimal(content[15].text) if content[15].text is not '' else Decimal(1.0)
+                threePointFieldGoals = int(content[17].text)
+                threePointFieldGoalAttempts = int(content[19].text)
+                threePointFieldGoalPercentage = Decimal(content[21].text) if content[21].text is not '' else Decimal(1.0)
+                freeThrows = int(content[23].text)
+                freeThrowAttempts = int(content[25].text)
+                freeThrowPercentage = Decimal(content[27].text) if content[27].text is not '' else Decimal(1.0)
+                offensiveRebounds = int(content[29].text)
+                defensiveRebounds = int(content[31].text)
+                totalRebounds = int(content[33].text)
+                assists = int(content[35].text)
+                steals = int(content[37].text)
+                blocks = int(content[39].text)
+                turnovers = int(content[41].text)
+                personalFouls = int(content[43].text)
+                points = int(content[45].text)
+
+                # Hard coding placeholder values for testing
+                playerStats.append({
+                    'teamName': teams[0]['teamName'] if i % 2 == 1 else teams[1]['teamName'],
+                    'playerName': content[1].text,
+                    'seasonYear': 2016,
+                    'gameDate': date(month=12,day=12,year=2012),
+                    'minutesPlayed': minutesPlayed if minutesPlayed is not '' else 5,
+                    'fieldGoals': fieldGoals if fieldGoals is not '' else 5,
+                    'fieldGoalAttempts': fieldGoalAttempts if fieldGoalAttempts is not '' else 5,
+                    'fieldGoalPercentage': fieldGoalPercentage if fieldGoalPercentage is not '' else 5,
+                    'twoPointFieldGoals': twoPointFieldGoals if twoPointFieldGoals is not '' else 5,
+                    'twoPointFieldGoalAttempts': twoPointFieldGoalAttempts if twoPointFieldGoalAttempts is not '' else 5,
+                    'twoPointFieldGoalPercentage': twoPointFieldGoalPercentage if twoPointFieldGoalPercentage is not '' else 5.0,
+                    'threePointFieldGoals': threePointFieldGoals if threePointFieldGoals is not '' else 5,
+                    'threePointFieldGoalAttempts': threePointFieldGoalAttempts if threePointFieldGoalAttempts is not '' else 5,
+                    'threePointFieldGoalPercentage': threePointFieldGoalPercentage if threePointFieldGoalPercentage is not '' else 5.0,
+                    'freeThrows': freeThrows if freeThrows is not '' else 5,
+                    'freeThrowAttempts': freeThrowAttempts if freeThrowAttempts is not '' else 5,
+                    'freeThrowPercentage': freeThrowPercentage if freeThrowPercentage is not '' else 5.0,
+                    'offensiveRebounds': offensiveRebounds if offensiveRebounds is not '' else 5,
+                    'defensiveRebounds': defensiveRebounds if defensiveRebounds is not '' else 5,
+                    'totalRebounds': totalRebounds if totalRebounds is not '' else 5,
+                    'assists': assists if assists is not '' else 5,
+                    'steals': steals if steals is not '' else 5,
+                    'blocks': blocks if blocks is not '' else 5,
+                    'turnovers': turnovers if turnovers is not '' else 5,
+                    'personalFouls': personalFouls if personalFouls is not '' else 5,
+                    'points': points if points is not '' else 5)
+
+
+        return playerStats
