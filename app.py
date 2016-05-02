@@ -4,18 +4,10 @@ from webscraper import WebScraperManager
 import statistics
 from config import *
 
-from flask import Flask
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-    return "Hello World"
-
+from server import app
 
 if __name__ == '__main__':
     #database_manager = DatabaseManager()
     #web_scraper = WebScraperManager()
 
-    app.run()
+    app.run(debug=True)
