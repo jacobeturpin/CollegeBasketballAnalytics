@@ -24,7 +24,7 @@ CREATE TABLE Game (
 	AwayTeamScore	integer				NOT NULL
 );
 
-/*
+
 CREATE TABLE PlayerBoxScore (
 	PlayerId	varchar(36)		NOT NULL,
 	GameId		varchar(36)		NOT NULL,
@@ -32,4 +32,4 @@ CREATE TABLE PlayerBoxScore (
 	FGM			integer			NULL,
 	FGA			integer			NULL,
 	FGP			decimal			NULL,
-) */
+)

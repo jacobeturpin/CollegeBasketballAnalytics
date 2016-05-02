@@ -6,27 +6,22 @@ from boxscore import *
 class WebScraperManager():
 
     _url_root = 'http://sports-reference.com/cbb/'
+    
 
-
-    def __init__(self):
-        return None
+    def __init__(self, **kwargs):
+        self._last_scrape_date = None
+        return super().__init__(**kwargs)
 
 
     def get_all_games_for_date(self, month, day, year):
 
-        if datetime.datetime.today() < datetime.datetime(month=month, day=day, year=year):
-            raise
+        if datetime.date.today() < datetime.date(month=month, day=day, year=year):
+            raise ValueError("Must use current or past date")
 
         url = str.format('{0}boxscores/index.cgi?month={1}&day={2}&year={3}',
-                         self._url_root,
-                         month,
-                         day,
-                         year)
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content, "html.parser")
-        games = []
-        for link in soup.find_all('a', text='Final'):
-            games.append(link.get('href'))
+                         self._url_root, month, day, year)
+        soup = BeautifulSoup(requests.get(url).content, "html.parser")
+        games = [link.get('href') for link in soup.find_all('a', text='Final')]
         return games
 
 
@@ -34,14 +29,14 @@ class WebScraperManager():
         r = requests.get(str.format('{0}{1}', _url_root, game_link_address))
         soup = BeautifulSoup(r.content, "html.parser")
 
-        teams = self.get_individual_game_team_data(soup)
-        team_stats = self.get_individual_teams_game_stats(soup, teams)
-        player_stats = self.get_individual_players_game_stats(soup, teams)
+        teams = self._get_individual_game_team_data(soup)
+        team_stats = self._get_individual_teams_game_stats(soup, teams)
+        player_stats = self._get_individual_players_game_stats(soup, teams)
 
         return {'teams': teams, 'teamStats': team_stats, 'playerStats': player_stats}
 
 
-    def get_individual_game_team_data(self, soup):
+    def _get_individual_game_team_data(self, soup):
         
         staging = soup.find('th', text='Scoring').parent.parent
         content = staging.find_all('tr')[2:]
@@ -74,7 +69,7 @@ class WebScraperManager():
         return [awayTeam, homeTeam]
 
     #Need to make tolerant of null statistical categories (even if not very likely at team level)
-    def get_individual_teams_game_stats(self, soup, teams):
+    def _get_individual_teams_game_stats(self, soup, teams):
         
         i, teamStats = 0, []
         staging = soup.find_all('th', text='Basic Box Score Stats')
@@ -116,7 +111,7 @@ class WebScraperManager():
 
 
     # Need to make tolerant of null statistical categories
-    def get_individual_players_game_stats(self, soup):
+    def _get_individual_players_game_stats(self, soup):
         
         i, playerStats = 0, []
 

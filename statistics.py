@@ -1,7 +1,6 @@
 # Environmental modules
 from decimal import Decimal
 
-# Local modules
 
 class BasicStatistics():
 
@@ -58,3 +57,7 @@ class AdvancedStatistics():
         self.usage_percentage = usage_percentage
         self.offensive_rating = offensive_rating
         self.defensive_rating = defensive_rating
+
+
+class Statistics(BasicStatistics, AdvancedStatistics):
+    pass
