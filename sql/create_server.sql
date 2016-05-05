@@ -1,17 +1,17 @@
 CREATE TABLE Player (
-	PlayerId	varchar(36)			NOT NULL,
+	PlayerId	varchar(36)			PRIMARY KEY,
 	Name		varchar(250)		NOT NULL,
 	Link		nvarchar(max)		NOT NULL
 );
 
 CREATE TABLE Team (
-	TeamId		varchar(36)			NOT NULL,
+	TeamId		varchar(36)			PRIMARY KEY,
 	Name		varchar(250)		NOT NULL,
 	Link		nvarchar(max)		NOT NULL
 );
 
 CREATE TABLE Game (
-	GameId			varchar(36)			NOT NULL,
+	GameId			varchar(36)			PRIMARY KEY,
 	GameDate		datetime			NOT NULL,
 	Link			nvarchar(max)		NOT NULL,
 	GameType		integer				NOT NULL,
@@ -23,6 +23,7 @@ CREATE TABLE Game (
 );
 
 CREATE TABLE PlayerBoxScore (
+	BoxScoreId	varchar(36)		PRIMARY KEY,
 	PlayerId	varchar(36)		NOT NULL,
 	TeamId		varchar(36)		NOT NULL,
 	GameId		varchar(36)		NOT NULL,
@@ -51,6 +52,7 @@ CREATE TABLE PlayerBoxScore (
 )
 
 CREATE TABLE TeamBoxScore (
+	BoxScoreId	varchar(36)		PRIMARY KEY,
 	TeamId		varchar(36)		NOT NULL,
 	GameId		varchar(36)		NOT NULL,
 	MP			integer			NOT NULL,
